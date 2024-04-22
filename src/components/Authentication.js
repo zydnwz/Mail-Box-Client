@@ -29,7 +29,6 @@ const Authentication = () => {
     };
 
     let url;
-
     const auth = async () => {
         if (confirmPassword !== password) {
             return setError('Password and Confirm Password do not match');

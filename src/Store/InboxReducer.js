@@ -3,7 +3,6 @@ import { createSlice } from "@reduxjs/toolkit"
 const initialState={
     inboxData:[],
 }
-
 const InboxReducer=createSlice({
     name:'Inbox',
     initialState:initialState,

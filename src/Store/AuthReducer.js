@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit"
 
 const initialState={
-    isAuthenticate:false
+    isAuthenticate:!!localStorage.getItem('email')
 }
+
 const AuthReducer=createSlice({
     name:'Authentication',
     initialState:initialState,
@@ -12,6 +13,7 @@ const AuthReducer=createSlice({
         },
         logout(state){
             state.isAuthenticate=false
+            localStorage.clear()
         }
     }
 })
