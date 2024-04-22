@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Button, Form, Alert } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { Form, Button, Alert } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
+import { AuthActions } from '../Store/AuthReducer';
 import classes from './Authentication.module.css';
 
 const Authentication = () => {
@@ -9,29 +10,35 @@ const Authentication = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [login, setLogin] = useState(true);
     const [error, setError] = useState('');
+    const dispatch = useDispatch();
 
     const emailHandler = (e) => {
         setEmail(e.target.value);
     };
+
     const passwordHandler = (e) => {
         setPassword(e.target.value);
     };
+
     const confirmPasswordHandler = (e) => {
         setConfirmPassword(e.target.value);
     };
+
     const switchHandler = () => {
         setLogin(!login);
     };
 
+    let url;
+
     const auth = async () => {
         if (confirmPassword !== password) {
-            setError('Password and Confirm Password do not match');
-            return;
+            return setError('Password and Confirm Password do not match');
         }
-        const url = login
-            ? 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyA1RK_IQ3Z_CZ5xmOxuuYBXPOJJnwTJa6I'
-            : 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyA1RK_IQ3Z_CZ5xmOxuuYBXPOJJnwTJa6I';
-
+        if (login) {
+            url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyA1RK_IQ3Z_CZ5xmOxuuYBXPOJJnwTJa6I';
+        } else {
+            url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyA1RK_IQ3Z_CZ5xmOxuuYBXPOJJnwTJa6I';
+        }
         try {
             const response = await fetch(url, {
                 method: 'POST',
@@ -47,14 +54,13 @@ const Authentication = () => {
             const data = await response.json();
             console.log(data);
             if (data.error) {
-                setError(data.error.message);
-            } else {
-                setError('');
-                alert('Login successful');
+                return setError(data.error.message);
             }
+            setError('');
+            alert('Login successful');
+            dispatch(AuthActions.login());
         } catch (error) {
             console.log(error);
-            setError('Something went wrong. Please try again later.');
         }
     };
 
@@ -67,7 +73,7 @@ const Authentication = () => {
         <div className={classes.parent}>
             <div className={classes.container}>
                 <Form onSubmit={submitHandler} className={classes.child1}>
-                    <h3>{login ? 'Login' : 'Sign Up'}</h3>
+                    <h3>Login</h3>
                     <div className={classes.input}>
                         <Form.Control
                             type="email"
@@ -83,15 +89,13 @@ const Authentication = () => {
                             onChange={passwordHandler}
                             required
                         />
-                        {!login && (
-                            <Form.Control
-                                type="password"
-                                placeholder="Confirm Password"
-                                value={confirmPassword}
-                                onChange={confirmPasswordHandler}
-                                required
-                            />
-                        )}
+                        <Form.Control
+                            type="password"
+                            placeholder="Confirm Password"
+                            value={confirmPassword}
+                            onChange={confirmPasswordHandler}
+                            required
+                        />
                     </div>
                     {error && <Alert variant="danger">{error}</Alert>}
                     <Button type="submit" variant="primary">
@@ -101,7 +105,7 @@ const Authentication = () => {
             </div>
             <div className={classes.child2}>
                 <Button type="button" variant="secondary" onClick={switchHandler}>
-                    {login ? 'Create an Account' : 'Have an Account? Login'}
+                    {login ? 'Create Account' : 'Have an Account? Login'}
                 </Button>
             </div>
         </div>

@@ -1,10 +1,15 @@
+import { useSelector } from 'react-redux';
 import './App.css';
 import Authentication from './components/Authentication';
+import WelcomeScreen from './components/WelcomeScreen';
 
 function App() {
+  const isAuthentic=useSelector((state)=>state.authReducer.isAuthenticate)
+
   return (
     <div className="App">
-      <Authentication />
+      {!isAuthentic && <Authentication />}
+      {isAuthentic && <WelcomeScreen />}
     </div>
   );
 }
