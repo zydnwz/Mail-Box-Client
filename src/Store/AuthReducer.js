@@ -14,7 +14,6 @@ const AuthReducer=createSlice({
             state.isAuthenticate=false
         }
     }
-
 })
 export const AuthActions=AuthReducer.actions
 export default AuthReducer.reducer
