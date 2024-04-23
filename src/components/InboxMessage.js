@@ -1,44 +1,67 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { Spinner } from "react-bootstrap";
 import classes from "./InboxMessage.module.css";
 import Sidebar from "./Sidebar";
 
 const InboxMessage = () => {
   const { Identifier } = useParams();
   const arrayData = useSelector((state) => state.inboxReducer.inboxData);
-  const Msg = arrayData.filter((msg) => msg.id === Identifier);
-  console.log(arrayData);
-  const singlemsg = Msg[0].message;
+  const [singlemsg, setSingleMsg] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  let url = "https://mail-box-client-8e420-default-rtdb.firebaseio.com";
-  const receiver1 = localStorage.getItem("email").replace(/['@','.']/g, "");
-  const putData = async () => {
-    try {
-      const response = await fetch(
-        `${url}/Inbox/${receiver1}/${Identifier}.json`,
-        {
-          method: "PATCH",
-          body: JSON.stringify({
-            read: true,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }        
-      );
-      console.log(response);
+  useEffect(() => {
+    const fetchMessage = async () => {
+      try {
+        const response = await fetchMessageData();
+        if (response.ok) {
+          const messageData = await response.json();
+          setSingleMsg(messageData.message);
+          await markMessageAsRead();
+        } else {
+          throw new Error("Failed to fetch message data");
+        }
+      } catch (error) {
+        console.error("Error fetching message:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    } catch (error) {
-      console.log(error);
-    }
+    fetchMessage();
+  }, [Identifier]);
+
+  const fetchMessageData = async () => {
+    const url = `https://mail-box-client-8e420-default-rtdb.firebaseio.com/Inbox/${localStorage.getItem("email").replace(/['@','.']/g, "")}/${Identifier}.json`;
+    return await fetch(url);
   };
-  useEffect(()=>{
-    putData()
-  },[])
+
+  const markMessageAsRead = async () => {
+    const url = `https://mail-box-client-8e420-default-rtdb.firebaseio.com/Inbox/${localStorage.getItem("email").replace(/['@','.']/g, "")}/${Identifier}.json`;
+    await fetch(url, {
+      method: "PATCH",
+      body: JSON.stringify({
+        read: true,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  };
+
+  if (loading) {
+    return (
+      <div className={classes.parent}>
+        <Spinner animation="border" role="status">
+          <span className="sr-only">Loading...</span>
+        </Spinner>
+      </div>
+    );
+  }
+
   return (
     <div className={classes.parent}>
-      
       <div className={classes.msg}>
         <p>{singlemsg}</p>
       </div>

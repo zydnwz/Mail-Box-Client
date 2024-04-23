@@ -1,4 +1,3 @@
-
 import { useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
@@ -16,7 +15,7 @@ function App() {
       <Route path='/' element={!isAuthentic ? <Authentication /> : <WelcomeScreen />}></Route>
       <Route path='/Inbox' element={!isAuthentic ? <Authentication /> : <Inbox />}></Route>
       <Route path='/Inbox/:Identifier' element={!isAuthentic ? <Authentication /> : <InboxMessage />}></Route>
-    </Routes>            
+    </Routes>
     </div>
   );
 }
