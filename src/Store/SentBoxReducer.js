@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState={
     dataSentbox:[]
 }
+
 const SentBox=createSlice({
     name:'sentBox',
     initialState:initialState,

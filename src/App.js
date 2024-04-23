@@ -19,7 +19,7 @@ function App() {
       <Route path='/SentBox' element={!isAuthentic ? <Authentication /> : <SentBox />}></Route>
       <Route path='/Inbox/:Identifier' element={!isAuthentic ? <Authentication /> : <InboxMessage />}></Route>
       <Route path='/Sentbox/:Identifier' element={!isAuthentic ? <Authentication /> : <SentboxMessage />}></Route>
-    </Routes>            
+    </Routes>      
     </div>
   );
 }

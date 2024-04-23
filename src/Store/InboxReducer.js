@@ -2,9 +2,10 @@ import { createSlice } from "@reduxjs/toolkit"
 
 const initialState={
     inboxData:[],
-    unread:0
-
+    unread:0,
+    getReq:true
 }
+
 const InboxReducer=createSlice({
     name:'Inbox',
     initialState:initialState,
@@ -14,6 +15,9 @@ const InboxReducer=createSlice({
         },
         updateUnread(state, actions){
             state.unread=actions.payload
+        },
+        updateGet(state){
+            state.getReq=!state.getReq
         }
     }
 })
