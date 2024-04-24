@@ -1,23 +1,23 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
-import classes from './SentboxMessage.module.css'
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import classes from './SentboxMessage.module.css';
+import { useSentboxMessage } from './useCustom'; 
 
 const SentboxMessage = () => {
-    const {Identifier}=useParams()
-    const dataSentbox=useSelector(state=>state.sentBoxReducer.dataSentbox)
-    const singleMessage=dataSentbox.filter((msg)=>msg.id===Identifier)
-    const Msg=singleMessage[0].message
-    const user=singleMessage[0].to
+  const { Identifier } = useParams();
+  const { getMessage } = useSentboxMessage(Identifier); 
+
+  const { user, message } = getMessage();
 
   return (
-    <div className={classes.parent}>      
-    <div className={classes.msg}>
-    <p>To:- {user}</p>
-      <p>Message:- {Msg}</p>
+    <div className={classes.parent}>
+      <div className={classes.msg}>
+        <p>To:- {user}</p>
+        <p>Message:- {message}</p>
+      </div>
     </div>
-  </div>
-  )
+  );
 }
 
-export default SentboxMessage
+export default SentboxMessage;

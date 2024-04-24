@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+
 const initialState={
     dataSentbox:[]
 }
-
 const SentBox=createSlice({
     name:'sentBox',
     initialState:initialState,
@@ -11,6 +11,7 @@ const SentBox=createSlice({
         updateSentbox(state,actions){
             state.dataSentbox=actions.payload
         }
+
     }
 })
 export const sentBoxActions=SentBox.actions
